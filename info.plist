@@ -70,7 +70,7 @@
 				<key>runningsubtext</key>
 				<string>正在获取中...</string>
 				<key>script</key>
-				<string>/usr/local/bin/node index.js "{query}"</string>
+				<string>/usr/local/bin/node index.js -q "{query}"</string>
 				<key>title</key>
 				<string>Coding, 让开发更简单！</string>
 				<key>type</key>
