@@ -9,7 +9,16 @@
 	<key>connections</key>
 	<dict>
 		<key>EAA3E124-DE75-4C9A-A97D-BD33C0B0E301</key>
-		<array/>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5D7DEBF4-1D77-4A67-9A6C-2AC44245BDAC</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 	</dict>
 	<key>createdby</key>
 	<string>LiJianying</string>
@@ -21,6 +30,23 @@
 	<string>Coding.Net</string>
 	<key>objects</key>
 	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>plusspaces</key>
+				<false/>
+				<key>url</key>
+				<string>{query}</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>5D7DEBF4-1D77-4A67-9A6C-2AC44245BDAC</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 		<dict>
 			<key>config</key>
 			<dict>
@@ -58,7 +84,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>cd</string>
+				<string>c</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -70,7 +96,7 @@
 				<key>runningsubtext</key>
 				<string>正在获取中...</string>
 				<key>script</key>
-				<string>/usr/local/bin/node index.js -q "{query}"</string>
+				<string>/usr/local/bin/node main.js -t "813450697ca34639a0cf8bb0f024dec2" -q "{query}"</string>
 				<key>title</key>
 				<string>Coding, 让开发更简单！</string>
 				<key>type</key>
@@ -90,6 +116,11 @@
 	<string></string>
 	<key>uidata</key>
 	<dict>
+		<key>5D7DEBF4-1D77-4A67-9A6C-2AC44245BDAC</key>
+		<dict>
+			<key>ypos</key>
+			<real>10</real>
+		</dict>
 		<key>AAD484A2-18E3-412C-80A5-64B6A09EF8CD</key>
 		<dict>
 			<key>ypos</key>

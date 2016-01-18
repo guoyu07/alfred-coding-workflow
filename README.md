@@ -2,12 +2,30 @@
 
 基于 Alfred Workflows 的 Coding项目搜索插件
 
-# 安装
+## 使用
+### 安装
+[点我下载](https://raw.githubusercontent.com/lijy91/alfred-coding-workflow/master/raw/.gitkeep)
 
-# 配置
+### 配置
+[点我获取Token](http://alfred-coding-workflow.coding.io)
+```bash
+$ cd ~/
+$ touch .acw_config
+$ echo ACCESS_TOKEN = <Token> .acw_config
+```
 
-# 用法
+### 用法
+- option + space
 
+## 开发
+
+### 克隆源码到 Alfred 插件目录
+
+```bash
+$ cd cd ~/Library/Application\ Support/Alfred\ 2/Alfred.alfredpreferences/workflows
+$ git clone git@github.com:lijy91/alfred-coding-workflow.git user.workflow.060322F2-E9AE-4758-BCDE-39FFC36C4D10
+$ atom .
+```
 
 # License
 
