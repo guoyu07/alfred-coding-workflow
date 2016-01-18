@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const fs = require('fs');
 const request = require('sync-request');
 const argv = require('minimist')(process.argv.slice(2));
 const version = require('./package.json').version;
@@ -13,14 +14,14 @@ const Item = AlfredNode.Item;
 
 // 筛选项目
 function filtering() {
-    count = 0;
+    var count = 0;
     var projects = db('projects').value();
     projects.forEach(function(project) {
         if (queryReg.test(project.name)) {
             var projectItem = new Item({
                 uid: project.id,
                 title: project.name,
-                subtitle: project.description,
+                subtitle: project.is_public ? "[公开]" : "[私有]" + " " + project.description,
                 valid: true, icon: AlfredNode.ICONS.WEB,
                 arg: project.https_url,
                 autocomplete: "autocomplete"}
@@ -29,11 +30,20 @@ function filtering() {
             count += 1;
         }
     });
+    if (count == 0) {
+        workflow.addItem(new Item({
+          valid: true, icon: AlfredNode.ICONS.WARNING,
+          title: "没有符合条件的项目"
+        }));
+    }
 }
 
 var token = "";
-var count = 0;
 
+// 清空缓存数据
+if (argv.c || argv.clear) {
+    db('projects').remove({});
+}
 // 判断版本更新
 
 // 设置 Token
@@ -42,6 +52,11 @@ if (argv.t || argv.token) {
     token = typeof (argv.t || argv.token) === 'string' ? (argv.t || argv.token).trim() : '';
 } else {
     // 通过配置设置 Token
+    var configPath = (process.env.HOME || process.env.USERPROFILE) + '/.acw_config.json';
+    try {
+        var config = JSON.parse(fs.readFileSync(configPath));
+        token = config.token;
+    } catch (e) { }
 }
 
 // 未设置 Token 错误提醒
@@ -72,7 +87,7 @@ if (token == "") {
         if (db('projects').size() > 0) {
             filtering();
         } else {
-            // 清空旧数据
+            // 清空缓存数据
             db('projects').remove({});
             var response = request('GET', 'https://coding.net/api/user/projects?page=1&pageSize=100&access_token=' + token);
             try {
@@ -88,11 +103,19 @@ if (token == "") {
                     }
                 } else {
                     result.data.list.forEach(function(project) {
+                        // 替换会出现转义符的情况
+                        var description = project.description
+                          .replace('\n', '')
+                          .replace('\r', '')
+                          .replace('\t', '')
+                          .replace('\b', '')
+                          .replace('\f', '');
                         db('projects').push({
                             id: project.id,
                             name: project.name,
-                            description: project.description,
+                            description: description,
                             https_url: project.https_url,
+                            is_public: project.is_public
                         });
                     });
                     filtering();
@@ -108,13 +131,6 @@ if (token == "") {
         }
     }
 }
-if (count == 0) {
-    workflow.addItem(new Item({
-      valid: true, icon: AlfredNode.ICONS.WARNING,
-      title: "没有符合条件的项目",
-      arg: "https://github.com/lijy91/alfred-coding-workflow"
-    }));
-}
 
 try {
     workflow.feedback();
@@ -128,7 +144,3 @@ try {
 } finally {
     workflow.feedback();
 }
-
-// https://coding.net/oauth_authorize.html?client_id=8611acd29258e165f3e15402eefa2cbd&redirect_uri=http://acw.coding.io&response_type=code&scope=project
-// https://coding.net/api/oauth/access_token?client_id=8611acd29258e165f3e15402eefa2cbd&client_secret=47e1dbfec4f115443f8b988aa8ad496ef9888334&grant_type=authorization_code&code=561da76ea0406620072df3ea80e6207f
-// {"access_token":"813450697ca34639a0cf8bb0f024dec2","refresh_token":"45e49152a22b4de49f887dd620446ec5","expires_in":"864000"}

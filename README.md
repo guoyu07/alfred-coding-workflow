@@ -15,13 +15,29 @@ P.S.: 你需要 [购买 Powerpack](https://buy.alfredapp.com/) 才能使用本�
 
 ### 配置
 [获取Token](http://acw.coding.io)
+
+#### 方法1（推荐）
 ```bash
 $ cd ~/
-$ touch .acw_config
-$ echo ACCESS_TOKEN = <Token> .acw_config
+$ touch .acw_config.json
 ```
 
-### 用法
+编辑 ~/.acw_config.json 文件，设置Token
+```json
+{
+    "token": "<access_token>"
+}
+```
+#### 方法二
+打开 Alfred 设置界面 -> 选择 Workflows -> 选择左侧 Coding.Net 项目 -> 双击 Script Filter（Coding图标）
+
+编辑 Script 增加 `-t` 参数
+
+```bash
+/usr/local/bin/node main.js -q "{query}" -t "<access_token>"
+```
+
+### 使用
 - `option + space` 启动 Alfred 2
 - 输入前缀 `c ` 再输入搜索关键字即可以
 
