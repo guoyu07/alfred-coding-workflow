@@ -48,7 +48,7 @@ if (argv.t || argv.token) {
 if (token == "") {
     workflow.addItem(new Item({
       valid: true, icon: AlfredNode.ICONS.ERROR,
-      title: "错误：无令牌，请按 Return 键查看配置说明",
+      title: "令牌未配置，按下 Return 键查看配置说明",
       arg: "https://github.com/lijy91/alfred-coding-workflow"
     }));
 // 搜索 Coding 项目
@@ -65,7 +65,7 @@ if (token == "") {
     if (query.length === 0) {
         workflow.addItem(new Item({
           valid: true, icon: AlfredNode.ICONS.ERROR,
-          title: "错误：搜索参数设置错误，请按 Return 键查看配置说明",
+          title: "搜索参数未配置，按下 Return 键查看配置说明",
           arg: "https://github.com/lijy91/alfred-coding-workflow"
         }));
     } else {
@@ -82,7 +82,7 @@ if (token == "") {
                     if (result.code == 3016) {
                         workflow.addItem(new Item({
                           valid: true, icon: AlfredNode.ICONS.ERROR,
-                          title: "错误：无效的令牌，请按 Return 键查看配置说明",
+                          title: "无效的令牌，按下 Return 键查看配置说明",
                           arg: "https://github.com/lijy91/alfred-coding-workflow"
                         }));
                     }
@@ -111,7 +111,7 @@ if (token == "") {
 if (count == 0) {
     workflow.addItem(new Item({
       valid: true, icon: AlfredNode.ICONS.WARNING,
-      title: "警告：没有找到相关项目",
+      title: "没有符合条件的项目",
       arg: "https://github.com/lijy91/alfred-coding-workflow"
     }));
 }
@@ -122,7 +122,7 @@ try {
     workflow.clearItems();
     workflow.addItem(new Item({
       valid: true, icon: AlfredNode.ICONS.ERROR,
-      title: "错误：发生异常，请联系开发者",
+      title: "发生异常，按下 Return 键提交反馈",
       arg: "https://github.com/lijy91/alfred-coding-workflow/issues"
     }));
 } finally {
