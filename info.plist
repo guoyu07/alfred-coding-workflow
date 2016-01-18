@@ -96,7 +96,7 @@
 				<key>runningsubtext</key>
 				<string>正在获取中...</string>
 				<key>script</key>
-				<string>/usr/local/bin/node main.js -t "813450697ca34639a0cf8bb0f024dec2" -q "{query}"</string>
+				<string>/usr/local/bin/node main.js -t "fea5600b9c7a41d0a919571523328e4c" -q "{query}"</string>
 				<key>title</key>
 				<string>Coding, 让开发更简单！</string>
 				<key>type</key>

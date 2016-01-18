@@ -23,8 +23,7 @@
   "dependencies": {
     "alfred-workflow-nodejs": "^1.1.0",
     "lowdb": "^0.10.3",
-    "minimatch": "^3.0.0",
     "minimist": "^1.2.0",
-    "request": "^2.67.0"
+    "sync-request": "^3.0.0"
   }
 }

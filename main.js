@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-const request = require('request');
-const minimatch = require('minimatch');
+const request = require('sync-request');
 const argv = require('minimist')(process.argv.slice(2));
 const version = require('./package.json').version;
 
@@ -12,15 +11,28 @@ const actionHandler = AlfredNode.actionHandler;
 const workflow = AlfredNode.workflow;
 const Item = AlfredNode.Item;
 
-
-function error(title, subtitle, arg) {
-    workflow.clearItems();
-    var item = new Item({uid: "0", title: title, subtitle: subtitle, valid: true, icon: AlfredNode.ICONS.ERROR, arg: arg,  autocomplete: "autocomplete"});
-    workflow.addItem(item);
-    workflow.feedback();
+// 筛选项目
+function filtering() {
+    count = 0;
+    var projects = db('projects').value();
+    projects.forEach(function(project) {
+        if (queryReg.test(project.name)) {
+            var projectItem = new Item({
+                uid: project.id,
+                title: project.name,
+                subtitle: project.description,
+                valid: true, icon: AlfredNode.ICONS.WEB,
+                arg: project.https_url,
+                autocomplete: "autocomplete"}
+            );
+            workflow.addItem(projectItem);
+            count += 1;
+        }
+    });
 }
 
 var token = "";
+var count = 0;
 
 // 判断版本更新
 
@@ -34,7 +46,11 @@ if (argv.t || argv.token) {
 
 // 未设置 Token 错误提醒
 if (token == "") {
-    error("错误：无令牌，请按 Return 键查看配置说明", "https://github.com/lijy91/alfred-coding-workflow", "https://github.com/lijy91/alfred-coding-workflow");
+    workflow.addItem(new Item({
+      valid: true, icon: AlfredNode.ICONS.ERROR,
+      title: "错误：无令牌，请按 Return 键查看配置说明",
+      arg: "https://github.com/lijy91/alfred-coding-workflow"
+    }));
 // 搜索 Coding 项目
 } else {
     // 获取关键字参数
@@ -47,71 +63,70 @@ if (token == "") {
     }
 
     if (query.length === 0) {
-        error("错误：搜索参数设置错误，请按 Return 键查看配置说明", "https://github.com/lijy91/alfred-coding-workflow", "https://github.com/lijy91/alfred-coding-workflow");
+        workflow.addItem(new Item({
+          valid: true, icon: AlfredNode.ICONS.ERROR,
+          title: "错误：搜索参数设置错误，请按 Return 键查看配置说明",
+          arg: "https://github.com/lijy91/alfred-coding-workflow"
+        }));
     } else {
         if (db('projects').size() > 0) {
-            var projects = db('projects').value();
-            projects.forEach(function(project) {
-                if (queryReg.test(project.name)) {
-                    var projectItem = new Item({
-                        uid: project.id,
-                        title: project.name,
-                        subtitle: project.description,
-                        valid: true, icon: AlfredNode.ICONS.WEB,
-                        arg: project.https_url,
-                        autocomplete: "autocomplete"}
-                    );
-                    workflow.addItem(projectItem);
-                }
-            });
-            workflow.feedback();
+            filtering();
         } else {
-            request.get('https://coding.net/api/user/projects?page=1&pageSize=100&access_token=' + token, {
-            }, function (error, response, body) {
-                // 没有 response 数据，或者状态码不为 200
-                if (response === undefined ||
-                    response.statusCode !== 200) {
-                    // TODO: 错误消息提醒
-                } else {
-                    try {
-                        // 清空旧数据
-                        db('projects').remove({});
-                        workflow.clearItems();
-                        var result = JSON.parse(body);
-                        // 返回的状态码不为 0
-                        if (result.code !== 0) {
-                            console.log(result.code)
-                            return;
-                        }
-                        result.data.list.forEach(function(project) {
-                            db('projects').push({
-                                id: project.id,
-                                name: project.name,
-                                description: project.description,
-                                https_url: project.https_url,
-                            });
-
-                            if (queryReg.test(project.name)) {
-                                var projectItem = new Item({
-                                    uid: project.id,
-                                    title: project.name,
-                                    subtitle: project.description,
-                                    valid: true, icon: AlfredNode.ICONS.WEB,
-                                    arg: project.https_url,
-                                    autocomplete: "autocomplete"}
-                                );
-                                workflow.addItem(projectItem);
-                            }
-                        });
-                        workflow.feedback();
-                    } catch(e) {
-                        // Not a valid JSON response
-                        console.log('Not a valid JSON response');
+            // 清空旧数据
+            db('projects').remove({});
+            var response = request('GET', 'https://coding.net/api/user/projects?page=1&pageSize=100&access_token=' + token);
+            try {
+                var result = JSON.parse(response.body);
+                // 返回的状态码不为 0
+                if (result.code !== 0) {
+                    if (result.code == 3016) {
+                        workflow.addItem(new Item({
+                          valid: true, icon: AlfredNode.ICONS.ERROR,
+                          title: "错误：无效的令牌，请按 Return 键查看配置说明",
+                          arg: "https://github.com/lijy91/alfred-coding-workflow"
+                        }));
                     }
+                } else {
+                    result.data.list.forEach(function(project) {
+                        db('projects').push({
+                            id: project.id,
+                            name: project.name,
+                            description: project.description,
+                            https_url: project.https_url,
+                        });
+                    });
+                    filtering();
                 }
-            });
+            } catch(e) {
+                // Not a valid JSON response
+                workflow.addItem(new Item({
+                  valid: true, icon: AlfredNode.ICONS.ERROR,
+                  title: "错误：Not a valid JSON response",
+                  arg: "https://github.com/lijy91/alfred-coding-workflow"
+                }));
+            }
         }
     }
+}
+if (count == 0) {
+    workflow.addItem(new Item({
+      valid: true, icon: AlfredNode.ICONS.WARNING,
+      title: "警告：没有找到相关项目",
+      arg: "https://github.com/lijy91/alfred-coding-workflow"
+    }));
+}
+
+try {
+    workflow.feedback();
+} catch (e) {
+    workflow.clearItems();
+    workflow.addItem(new Item({
+      valid: true, icon: AlfredNode.ICONS.ERROR,
+      title: "错误：发生异常，请联系开发者",
+      arg: "https://github.com/lijy91/alfred-coding-workflow/issues"
+    }));
+} finally {
+    workflow.feedback();
 }
 
 // https://coding.net/oauth_authorize.html?client_id=8611acd29258e165f3e15402eefa2cbd&redirect_uri=http://acw.coding.io&response_type=code&scope=project
