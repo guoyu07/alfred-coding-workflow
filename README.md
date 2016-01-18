@@ -22,7 +22,7 @@ $ echo ACCESS_TOKEN = <Token> .acw_config
 ### 克隆源码到 Alfred 插件目录
 
 ```bash
-$ cd cd ~/Library/Application\ Support/Alfred\ 2/Alfred.alfredpreferences/workflows
+$ cd ~/Library/Application\ Support/Alfred\ 2/Alfred.alfredpreferences/workflows
 $ git clone git@github.com:lijy91/alfred-coding-workflow.git user.workflow.060322F2-E9AE-4758-BCDE-39FFC36C4D10
 $ atom .
 ```

@@ -96,6 +96,6 @@ if (token == "") {
     }
 }
 
-// https://coding.net/oauth_authorize.html?client_id=8611acd29258e165f3e15402eefa2cbd&redirect_uri=https://github.com/lijy91/alfred-coding-workflow&response_type=code&scope=project
+// https://coding.net/oauth_authorize.html?client_id=8611acd29258e165f3e15402eefa2cbd&redirect_uri=http://acw.coding.io&response_type=code&scope=project
 // https://coding.net/api/oauth/access_token?client_id=8611acd29258e165f3e15402eefa2cbd&client_secret=47e1dbfec4f115443f8b988aa8ad496ef9888334&grant_type=authorization_code&code=561da76ea0406620072df3ea80e6207f
 // {"access_token":"813450697ca34639a0cf8bb0f024dec2","refresh_token":"45e49152a22b4de49f887dd620446ec5","expires_in":"864000"}
