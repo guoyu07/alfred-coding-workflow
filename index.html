@@ -29,5 +29,22 @@
   <!-- Placed at the end of the document so the pages load faster -->
   <script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
   <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+    $.urlParam = function(name){
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.search);
+        if (results==null){
+           return null;
+        }
+        else{
+           return results[1] || 0;
+        }
+    }
+    $(document).ready(function () {
+        var code = $.urlParam('code');
+        $.getJSON("https://coding.net/api/oauth/access_token?client_id=8611acd29258e165f3e15402eefa2cbd&client_secret=47e1dbfec4f115443f8b988aa8ad496ef9888334&grant_type=authorization_code&code=" + code, function(json){
+            alert("JSON Data: " + json.access_token);
+        });
+    });
+  </script>
 </body>
 </html>
