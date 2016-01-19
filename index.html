@@ -8,7 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>ACW</title>
+  <title>alfred-coding-workflow</title>
 
   <!-- Bootstrap core CSS -->
   <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
@@ -22,8 +22,18 @@
 
 <body>
 
-  <a href="https://coding.net/oauth_authorize.html?client_id=8611acd29258e165f3e15402eefa2cbd&redirect_uri=http://acw.coding.io&response_type=code&scope=project" class="btn btn-lg btn-default">获取</a>
-
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h1 class="mg-md text-center ">
+          <a href="https://coding.net/oauth_authorize.html?client_id=8611acd29258e165f3e15402eefa2cbd&redirect_uri=http://acw.coding.io&response_type=code&scope=project" class="btn btn-lg btn-default">授权</a>
+        </h1>
+        <h1 class="mg-md text-center ">
+          <a id="get_access_token">获取Token</a>
+        </h1>
+      </div>
+    </div>
+  </div>
   <!-- Bootstrap core JavaScript
   ================================================== -->
   <!-- Placed at the end of the document so the pages load faster -->
@@ -32,7 +42,7 @@
   <script type="text/javascript">
     $.urlParam = function(name){
         var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.search);
-        if (results==null){
+        if (results == null){
            return null;
         }
         else{
@@ -41,14 +51,13 @@
     }
     $(document).ready(function () {
         var code = $.urlParam('code');
-        $.ajax({
-            type: 'GET',
-            dataType : "jsonp",
-            url: "https://coding.net/api/oauth/access_token?client_id=8611acd29258e165f3e15402eefa2cbd&client_secret=47e1dbfec4f115443f8b988aa8ad496ef9888334&grant_type=authorization_code&code=" + code,
-            success: function (data) {
-                alert(data);
-            }
-        });
+        if (code != undefined) {
+            $('#get_access_token').attr({
+                href: "https://coding.net/api/oauth/access_token?client_id=8611acd29258e165f3e15402eefa2cbd&client_secret=47e1dbfec4f115443f8b988aa8ad496ef9888334&grant_type=authorization_code&code=" + code
+            });
+        } else {
+            $('#get_access_token').hide();
+        }
     });
   </script>
 </body>
