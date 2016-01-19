@@ -43,7 +43,7 @@ if (token == "") {
     // 清空缓存数据
     if (argv.c || argv.clear) {
         db('projects').remove({});
-        db('config').remove({});
+        db('configs').remove({});
         workflow.addItem(new Item({
           valid: true, icon: AlfredNode.ICONS.INFO,
           title: "数据缓存已清空"
@@ -62,7 +62,7 @@ if (token == "") {
             // 判断更新时间
             var now = new Date().getTime();
             var updateAt = 0;
-            var updateAtConfig = db('config').find({key:'project_update_at'});
+            var updateAtConfig = db('configs').find({ key: 'project_update_at' });
             if (updateAtConfig !== undefined) {
                 updateAt = updateAtConfig.value;
             }
@@ -70,14 +70,14 @@ if (token == "") {
             if ((now - updateAt) >= (3600 * 1000) || updateAt == 0) {
                 // 清空缓存数据
                 db('projects').remove({});
-                db('config').remove({});
+                db('configs').remove({});
                 // 获取代码库版本信息
                 var updateRes = request('GET', 'https://raw.githubusercontent.com/lijy91/alfred-coding-workflow/master/package.json');
                 try {
                     var updateRet = JSON.parse(updateRes.body);
                     // 保存更新时间戳
-                    db('config').remove({ key: 'remote_version' });
-                    db('config').push({ key: 'remote_version', value: updateRet.version });
+                    db('configs').remove({ key: 'remote_version' });
+                    db('configs').push({ key: 'remote_version', value: updateRet.version });
                 } catch (e) { }
                 var response = request('GET', 'https://coding.net/api/user/projects?page=1&pageSize=100&access_token=' + token);
                 try {
@@ -110,12 +110,12 @@ if (token == "") {
                             });
                         });
                         // 保存更新时间戳
-                        db('config').remove({ key: 'project_update_at' });
-                        db('config').push({ key: 'project_update_at', value: now });
+                        db('configs').remove({ key: 'project_update_at' });
+                        db('configs').push({ key: 'project_update_at', value: now });
                     }
                 } catch(e) {
                     db('projects').remove({});
-                    db('config').remove({});
+                    db('configs').remove({});
                     // Not a valid JSON response
                     workflow.addItem(new Item({
                       valid: true, icon: AlfredNode.ICONS.ERROR,
@@ -125,7 +125,7 @@ if (token == "") {
                 }
             }
             // 新版本提醒
-            var versionConfig = db('config').find({key:'remote_version'});
+            var versionConfig = db('configs').find({ key: 'remote_version' });
             if (versionConfig !== undefined && versionConfig.value > version) {
               workflow.addItem(new Item({
                 uid: 0,
