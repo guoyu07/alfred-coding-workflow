@@ -6,15 +6,15 @@
 ### 依赖
 本插件依赖 [Alfred 2](https://www.alfredapp.com/)
 
-P.S.: 你需要 [购买 Powerpack](https://buy.alfredapp.com/) 才能使用本插件
+P.S. 你必需 [购买 Powerpack](https://buy.alfredapp.com/) 才能使用本插件
 
 ### 安装
 
-[下载](https://github.com/lijy91/alfred-coding-workflow/blob/master/release/coding-1.0.0.alfredworkflow?raw=true)
+[下载插件](https://github.com/lijy91/alfred-coding-workflow/blob/master/release/coding-1.0.0.alfredworkflow?raw=true) 到本地，并双击安装
 
 
 ### 配置
-[获取Token](http://acw.coding.io)
+[获取 Token](http://acw.coding.io) 后按以下方法配置 Token
 
 #### 方法1（推荐）
 ```bash
