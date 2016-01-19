@@ -14,8 +14,6 @@ const Item = AlfredNode.Item;
 
 var token = "";
 
-// TODO: 判断版本更新
-
 // 获取 Token 参数（共有两种设置方式）
 if (argv.t || argv.token) {
     // 通过参数设置 Token
@@ -72,6 +70,15 @@ if (token == "") {
             if ((now - updateAt) >= (3600 * 1000) || updateAt == 0) {
                 // 清空缓存数据
                 db('projects').remove({});
+                db('config').remove({});
+                // 获取代码库版本信息
+                var updateRes = request('GET', 'https://raw.githubusercontent.com/lijy91/alfred-coding-workflow/master/package.json');
+                try {
+                    var updateRet = JSON.parse(updateRes.body);
+                    // 保存更新时间戳
+                    db('config').remove({ key: 'remote_version' });
+                    db('config').push({ key: 'remote_version', value: updateRet.version });
+                } catch (e) { }
                 var response = request('GET', 'https://coding.net/api/user/projects?page=1&pageSize=100&access_token=' + token);
                 try {
                     var result = JSON.parse(response.body);
@@ -95,6 +102,7 @@ if (token == "") {
                               .replace('\f', '');
                             db('projects').push({
                                 id: project.id,
+                                icon: project.icon,
                                 name: project.name,
                                 description: description,
                                 https_url: project.https_url,
@@ -102,7 +110,6 @@ if (token == "") {
                             });
                         });
                         // 保存更新时间戳
-                        console.log(now);
                         db('config').remove({ key: 'project_update_at' });
                         db('config').push({ key: 'project_update_at', value: now });
                     }
@@ -117,6 +124,16 @@ if (token == "") {
                     }));
                 }
             }
+            // 新版本提醒
+            var versionConfig = db('config').find({key:'remote_version'});
+            if (versionConfig !== undefined && versionConfig.value > version) {
+              workflow.addItem(new Item({
+                uid: 0,
+                valid: true, icon: AlfredNode.ICONS.SYNC,
+                title: "发现新版本，按下 Return 键查看更新",
+                arg: "https://github.com/lijy91/alfred-coding-workflow"
+              }));
+            }
             // 筛选项目
             var count = 0;
             if (db('projects').size() > 0) {
@@ -126,11 +143,10 @@ if (token == "") {
                         var projectItem = new Item({
                             uid: project.id,
                             title: project.name,
-                            subtitle: project.is_public ? "[公开]" : "[私有]" + " " + project.description,
+                            subtitle: (project.is_public ? "[公开] " : "[私有] ") + project.description,
                             valid: true, icon: AlfredNode.ICONS.WEB,
-                            arg: project.https_url,
-                            autocomplete: "autocomplete"}
-                        );
+                            arg: project.https_url
+                        });
                         workflow.addItem(projectItem);
                         count += 1;
                     }
