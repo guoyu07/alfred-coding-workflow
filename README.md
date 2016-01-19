@@ -6,7 +6,8 @@
 
 ## 使用
 ### 依赖
-本插件依赖 [Alfred 2](https://www.alfredapp.com/)
+
+本插件依赖 [Node.js](https://nodejs.org/en/) 以及 [Alfred 2](https://www.alfredapp.com/)
 
 P.S. 你必需 [购买 Powerpack](https://buy.alfredapp.com/) 才能使用本插件
 
