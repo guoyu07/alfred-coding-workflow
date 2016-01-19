@@ -2,6 +2,8 @@
 
 基于 Alfred2 Workflows 的 Coding 个人项目快速搜索插件
 
+如需要查看效果图，请访问 [新姿态快速搜索访问 Coding 项目](http://www.jianshu.com/p/d3a99f7debb1)
+
 ## 使用
 ### 依赖
 本插件依赖 [Alfred 2](https://www.alfredapp.com/)
