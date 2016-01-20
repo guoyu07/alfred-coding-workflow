@@ -104,6 +104,7 @@ if (token == "") {
                                 id: project.id,
                                 icon: project.icon,
                                 name: project.name,
+                                owner_user_name: project.owner_user_name,
                                 description: description,
                                 https_url: project.https_url,
                                 is_public: project.is_public
@@ -142,7 +143,7 @@ if (token == "") {
                     if (queryReg.test(project.name)) {
                         var projectItem = new Item({
                             uid: project.id,
-                            title: project.name,
+                            title: project.owner_user_name + "/" + project.name,
                             subtitle: (project.is_public ? "[公开] " : "[私有] ") + project.description,
                             valid: true, icon: AlfredNode.ICONS.WEB,
                             arg: project.https_url

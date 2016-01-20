@@ -1,6 +1,6 @@
 {
   "name": "alfred-coding-workflow",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
   "homepage": "https://github.com/lijy91/alfred-coding-workflow",
   "dependencies": {
     "alfred-workflow-nodejs": "^1.1.0",
-    "lowdb": "^0.10.3",
+    "lowdb": "^0.11.5",
     "minimist": "^1.2.0",
     "sync-request": "^3.0.0"
   }
