@@ -13,7 +13,7 @@ P.S. 你必需 [购买 Powerpack](https://buy.alfredapp.com/) 才能使用本插
 
 ### 安装
 
-[下载插件](https://github.com/lijy91/alfred-coding-workflow/blob/master/release/coding-1.0.3.alfredworkflow?raw=true) 到本地，并双击安装
+[下载插件](https://github.com/lijy91/alfred-coding-workflow/blob/master/release/coding-latest.alfredworkflow?raw=true) 到本地，并双击安装
 
 
 ### 配置
