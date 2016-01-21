@@ -5,7 +5,8 @@ const argv = require('minimist')(process.argv.slice(2));
 const version = require('./package.json').version;
 
 const low = require('lowdb');
-const db = low('db.json');
+const storage = require('lowdb/file-sync');
+const db = low('db.json', { storage });
 
 const AlfredNode = require('alfred-workflow-nodejs');
 const actionHandler = AlfredNode.actionHandler;
