@@ -205,7 +205,10 @@ if (db('projects').size() > 0) {
             iconUrl = "https://coding.net" + item.icon;
         }
         var output = path.join(IMAGE_PATH, item.id + ".png");
-        request.get(iconUrl).pipe(fs.createWriteStream(output));
+        if (!fs.existsSync(output)) {
+            request.get(iconUrl).pipe(fs.createWriteStream(output));
+        }
         callback();
+
     });
 }
