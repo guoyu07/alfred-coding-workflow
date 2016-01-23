@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 const fs = require('fs');
-const request = require('sync-request');
+const path = require('path');
+const del = require('del');
+const request = require('request');
+const sync_request = require('sync-request');
+const async = require('async');
 const argv = require('minimist')(process.argv.slice(2));
 const version = require('./package.json').version;
 
@@ -12,6 +16,12 @@ const AlfredNode = require('alfred-workflow-nodejs');
 const actionHandler = AlfredNode.actionHandler;
 const workflow = AlfredNode.workflow;
 const Item = AlfredNode.Item;
+
+if (!fs.existsSync(".tmp")) {
+    fs.mkdir(".tmp");
+}
+
+const IMAGE_PATH = ".tmp/image";
 
 var token = "";
 
@@ -45,6 +55,7 @@ if (token == "") {
     if (argv.c || argv.clear) {
         db('projects').remove({});
         db('configs').remove({});
+        del.sync(['.tmp/**']);
         workflow.addItem(new Item({
           valid: true, icon: AlfredNode.ICONS.INFO,
           title: "数据缓存已清空"
@@ -73,14 +84,14 @@ if (token == "") {
                 db('projects').remove({});
                 db('configs').remove({});
                 // 获取代码库版本信息
-                var updateRes = request('GET', 'https://raw.githubusercontent.com/lijy91/alfred-coding-workflow/master/package.json');
+                var updateRes = sync_request('GET', 'https://raw.githubusercontent.com/lijy91/alfred-coding-workflow/master/package.json');
                 try {
                     var updateRet = JSON.parse(updateRes.body);
                     // 保存更新时间戳
                     db('configs').remove({ key: 'remote_version' });
                     db('configs').push({ key: 'remote_version', value: updateRet.version });
                 } catch (e) { }
-                var response = request('GET', 'https://coding.net/api/user/projects?page=1&pageSize=100&access_token=' + token);
+                var response = sync_request('GET', 'https://coding.net/api/user/projects?page=1&pageSize=100&access_token=' + token);
                 try {
                     var result = JSON.parse(response.body);
                     // 返回的状态码不为 0
@@ -142,11 +153,16 @@ if (token == "") {
                 var projects = db('projects').value();
                 projects.forEach(function(project) {
                     if (queryReg.test(project.name)) {
+                        var icon = AlfredNode.ICONS.WEB;
+                        var iconFile = path.join(IMAGE_PATH, project.id + ".png");
+                        if (fs.existsSync(iconFile)) {
+                            icon = iconFile;
+                        }
                         var projectItem = new Item({
                             uid: project.id,
                             title: project.owner_user_name + "/" + project.name,
                             subtitle: (project.is_public ? "[公开] " : "[私有] ") + project.description,
-                            valid: true, icon: AlfredNode.ICONS.WEB,
+                            valid: true, icon: icon,
                             arg: project.https_url
                         });
                         workflow.addItem(projectItem);
@@ -174,4 +190,22 @@ try {
       arg: "https://github.com/lijy91/alfred-coding-workflow/issues"
     }));
     workflow.feedback();
+}
+
+if (db('projects').size() > 0) {
+    if (!fs.existsSync(IMAGE_PATH)) {
+        fs.mkdir(".tmp");
+        fs.mkdir(IMAGE_PATH);
+    }
+    var projects = db('projects').value();
+
+    async.eachLimit(projects, 1, function(item, callback) {
+        var iconUrl = item.icon;
+        if (!iconUrl.startsWith("http://") && !iconUrl.startsWith("https://")) {
+            iconUrl = "https://coding.net" + item.icon;
+        }
+        var output = path.join(IMAGE_PATH, item.id + ".png");
+        request.get(iconUrl).pipe(fs.createWriteStream(output));
+        callback();
+    });
 }

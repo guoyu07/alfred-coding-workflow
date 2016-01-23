@@ -2,9 +2,10 @@
   "name": "alfred-coding-workflow",
   "version": "1.0.5",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm db.json & rm npm-debug.log & rm -rf img"
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,9 @@
   "homepage": "https://github.com/lijy91/alfred-coding-workflow",
   "dependencies": {
     "alfred-workflow-nodejs": "^1.1.0",
+    "del": "^2.2.0",
     "lowdb": "^0.12.2",
+    "minimatch": "^3.0.0",
     "minimist": "^1.2.0",
     "sync-request": "^3.0.0"
   }
