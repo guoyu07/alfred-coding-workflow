@@ -192,23 +192,23 @@ try {
     workflow.feedback();
 }
 
-if (db('projects').size() > 0) {
-    if (!fs.existsSync(IMAGE_PATH)) {
-        fs.mkdir(".tmp");
-        fs.mkdir(IMAGE_PATH);
-    }
-    var projects = db('projects').value();
-
-    async.eachLimit(projects, 1, function(item, callback) {
-        var iconUrl = item.icon;
-        if (!iconUrl.startsWith("http://") && !iconUrl.startsWith("https://")) {
-            iconUrl = "https://coding.net" + item.icon;
-        }
-        var output = path.join(IMAGE_PATH, item.id + ".png");
-        if (!fs.existsSync(output)) {
-            request.get(iconUrl).pipe(fs.createWriteStream(output));
-        }
-        callback();
-
-    });
-}
+// if (db('projects').size() > 0) {
+//     if (!fs.existsSync(IMAGE_PATH)) {
+//         fs.mkdir(".tmp");
+//         fs.mkdir(IMAGE_PATH);
+//     }
+//     var projects = db('projects').value();
+//
+//     async.eachLimit(projects, 1, function(item, callback) {
+//         var iconUrl = item.icon;
+//         if (!iconUrl.startsWith("http://") && !iconUrl.startsWith("https://")) {
+//             iconUrl = "https://coding.net" + item.icon;
+//         }
+//         var output = path.join(IMAGE_PATH, item.id + ".png");
+//         if (!fs.existsSync(output)) {
+//             request.get(iconUrl).pipe(fs.createWriteStream(output));
+//         }
+//         callback();
+//
+//     });
+// }

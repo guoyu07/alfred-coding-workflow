@@ -1,6 +1,6 @@
 {
   "name": "alfred-coding-workflow",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "Alfred",
     "Coding.Net"
   ],
-  "author": "LiJianying",
+  "author": "JianyingLi <lijy91@foxmail.com>",
   "license": "Apache v2 License",
   "bugs": {
     "url": "https://github.com/lijy91/alfred-coding-workflow/issues"
