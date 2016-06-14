@@ -1,3 +1,6 @@
+# DEPRECATED
+该项目已弃用！！！
+
 # alfred-coding-workflow
 
 基于 Alfred2 Workflows 的 Coding 个人项目快速搜索插件
